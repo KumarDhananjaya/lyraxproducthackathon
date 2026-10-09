@@ -1,0 +1,11 @@
+{
+  "name": "bondback-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix bondback run dev",
+    "build": "npm --prefix bondback run build",
+    "start": "npm --prefix bondback run start",
+    "lint": "npm --prefix bondback run lint"
+  }
+}

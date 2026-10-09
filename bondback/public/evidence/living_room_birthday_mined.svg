@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="100%" height="100%">
+  <defs>
+    <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="floorGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#78350f"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+    <linearGradient id="rugGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e2e8f0"/>
+      <stop offset="50%" stop-color="#cbd5e1"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <pattern id="rugTexture" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 0 10 L 20 10 M 10 0 L 10 20" stroke="#94a3b8" stroke-width="0.7" opacity="0.3"/>
+      <circle cx="5" cy="5" r="1.5" fill="#64748b" opacity="0.2"/>
+      <circle cx="15" cy="15" r="1.5" fill="#64748b" opacity="0.2"/>
+    </pattern>
+    <radialGradient id="stainGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#881337" stop-opacity="0.85"/>
+      <stop offset="40%" stop-color="#9f1239" stop-opacity="0.6"/>
+      <stop offset="80%" stop-color="#be123c" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#fda4af" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blurShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+    </filter>
+  </defs>
+
+  <!-- Background Living Room Wall -->
+  <rect x="0" y="0" width="1000" height="420" fill="url(#wallGrad)"/>
+
+  <!-- Birthday Banner across the top wall -->
+  <path d="M 50 80 Q 250 140 500 80 T 950 90" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="6,4"/>
+  <polygon points="120,95 150,150 90,150" fill="#ec4899"/>
+  <polygon points="220,110 250,165 190,165" fill="#3b82f6"/>
+  <polygon points="320,115 350,170 290,170" fill="#10b981"/>
+  <polygon points="420,95 450,150 390,150" fill="#f59e0b"/>
+  <polygon points="520,85 550,140 490,140" fill="#8b5cf6"/>
+  <polygon points="620,95 650,150 590,150" fill="#ec4899"/>
+  <polygon points="720,105 750,160 690,160" fill="#06b6d4"/>
+  <polygon points="820,90 850,145 790,145" fill="#eab308"/>
+
+  <!-- Floating Birthday Balloons -->
+  <circle cx="880" cy="180" r="45" fill="#ec4899" opacity="0.85"/>
+  <path d="M 880 225 Q 890 280 885 340" fill="none" stroke="#cbd5e1" stroke-width="1.5"/>
+  <circle cx="830" cy="210" r="40" fill="#8b5cf6" opacity="0.85"/>
+  <path d="M 830 250 Q 840 300 850 350" fill="none" stroke="#cbd5e1" stroke-width="1.5"/>
+
+  <!-- Framed Art on Wall -->
+  <rect x="250" y="140" width="220" height="150" fill="#0f172a" stroke="#cbd5e1" stroke-width="6" rx="4"/>
+  <circle cx="360" cy="215" r="40" fill="#f59e0b" opacity="0.8"/>
+  <path d="M 270 280 L 330 220 L 390 270 L 450 200 L 460 280 Z" fill="#0284c7" opacity="0.9"/>
+
+  <!-- Baseboard / Skirting -->
+  <rect x="0" y="405" width="1000" height="25" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"/>
+
+  <!-- Hardwood Floor -->
+  <rect x="0" y="430" width="1000" height="570" fill="url(#floorGrad)"/>
+  <!-- Floor Planks Lines -->
+  <line x1="0" y1="490" x2="1000" y2="490" stroke="#270e03" stroke-width="2"/>
+  <line x1="0" y1="580" x2="1000" y2="580" stroke="#270e03" stroke-width="2"/>
+  <line x1="0" y1="700" x2="1000" y2="700" stroke="#270e03" stroke-width="2"/>
+  <line x1="0" y1="840" x2="1000" y2="840" stroke="#270e03" stroke-width="2"/>
+
+  <!-- Living Room Wool Rug (Claimed Area) -->
+  <!-- Perspective polygon covering large floor area -->
+  <polygon points="120,480 880,480 970,960 30,960" fill="url(#rugGrad)"/>
+  <polygon points="120,480 880,480 970,960 30,960" fill="url(#rugTexture)"/>
+  <polygon points="120,480 880,480 970,960 30,960" fill="none" stroke="#e2e8f0" stroke-width="4"/>
+
+  <!-- Sofa edge in background -->
+  <path d="M 50 360 C 50 320 180 320 220 360 L 220 520 L 50 520 Z" fill="#475569"/>
+  <rect x="30" y="420" width="180" height="80" rx="10" fill="#334155"/>
+
+  <!-- FOREGROUND SUBJECT: Sarah's Happy Pet Dog posing for 28th Birthday -->
+  <g transform="translate(480, 560)">
+    <!-- Dog Body & Tail -->
+    <ellipse cx="60" cy="180" rx="95" ry="70" fill="#d97706" />
+    <path d="M 140 180 Q 210 160 215 110" fill="none" stroke="#d97706" stroke-width="26" stroke-linecap="round"/>
+    
+    <!-- Paws on carpet -->
+    <ellipse cx="10" cy="245" rx="22" ry="14" fill="#b45309"/>
+    <ellipse cx="110" cy="245" rx="22" ry="14" fill="#b45309"/>
+    <ellipse cx="-40" cy="240" rx="18" ry="12" fill="#92400e"/>
+    <ellipse cx="150" cy="240" rx="18" ry="12" fill="#92400e"/>
+
+    <!-- Dog Head -->
+    <circle cx="10" cy="90" r="58" fill="#d97706"/>
+    <!-- Snout -->
+    <ellipse cx="-25" cy="110" rx="26" ry="20" fill="#fef3c7"/>
+    <ellipse cx="-35" cy="100" rx="10" ry="7" fill="#18181b"/>
+    <!-- Floppy Ears -->
+    <ellipse cx="40" cy="60" rx="20" ry="38" fill="#b45309" transform="rotate(25 40 60)"/>
+    <ellipse cx="-30" cy="55" rx="18" ry="36" fill="#b45309" transform="rotate(-30 -30 55)"/>
+    <!-- Eyes -->
+    <circle cx="-5" cy="80" r="7" fill="#18181b"/>
+    <circle cx="-3" cy="78" r="2" fill="#ffffff"/>
+    <circle cx="25" cy="82" r="7" fill="#18181b"/>
+    <circle cx="27" cy="80" r="2" fill="#ffffff"/>
+
+    <!-- Birthday Party Hat on Dog! -->
+    <polygon points="10,25 35,65 -15,65" fill="#f43f5e"/>
+    <circle cx="10" cy="25" r="7" fill="#facc15"/>
+    <path d="M -5 45 L 25 45" stroke="#ffffff" stroke-width="3"/>
+  </g>
+
+  <!-- Coffee Table leg & corner -->
+  <polygon points="80,560 160,540 160,720 80,750" fill="#1e293b" opacity="0.6"/>
+
+  <!-- THE HIDDEN FORENSIC DEFECT IN BACKGROUND (Normalized box: [ymin: 650, xmin: 180, ymax: 840, xmax: 430]) -->
+  <!-- Target X: 180 to 430 (width: 250), Target Y: 650 to 840 (height: 190) -->
+  <g id="pre-existing-wine-stain">
+    <!-- Faint organic discoloration from party spill 10 months ago -->
+    <ellipse cx="305" cy="745" rx="75" ry="50" fill="url(#stainGrad)"/>
+    <ellipse cx="270" cy="725" rx="35" ry="25" fill="url(#stainGrad)"/>
+    <ellipse cx="340" cy="760" rx="42" ry="28" fill="url(#stainGrad)"/>
+    <ellipse cx="300" cy="775" rx="20" ry="14" fill="#9f1239" opacity="0.35"/>
+  </g>
+
+  <!-- iPhone Camera UI / Timestamp Watermark -->
+  <rect x="25" y="25" width="370" height="42" rx="8" fill="#000000" fill-opacity="0.6"/>
+  <text x="40" y="52" fill="#38bdf8" font-family="monospace" font-size="16" font-weight="bold">● iPhone 14 Pro • IMG_4091</text>
+  <text x="730" y="52" fill="#f8fafc" font-family="monospace" font-size="16" font-weight="bold">14 MAR 2024 • 19:34</text>
+  <rect x="715" y="25" width="260" height="42" rx="8" fill="#000000" fill-opacity="0.6"/>
+</svg>

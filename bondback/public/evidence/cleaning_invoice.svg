@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="100%" height="100%">
+  <defs>
+    <filter id="pageShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Background desk -->
+  <rect x="0" y="0" width="1000" height="1000" fill="#0f172a"/>
+
+  <!-- Document Sheet -->
+  <rect x="120" y="80" width="760" height="840" rx="10" fill="#ffffff" filter="url(#pageShadow)"/>
+
+  <!-- Invoice Header -->
+  <rect x="120" y="80" width="760" height="110" rx="10" fill="#0284c7"/>
+  <text x="160" y="145" fill="#ffffff" font-family="sans-serif" font-size="30" font-weight="900" letter-spacing="1">PRISTINE CLEANS SYDNEY</text>
+  <text x="160" y="172" fill="#bae6fd" font-family="sans-serif" font-size="14">Certified End-of-Lease & Bond Recovery Specialists • ABN: 48 192 481 029</text>
+  <text x="740" y="145" fill="#ffffff" font-family="sans-serif" font-size="20" font-weight="bold">TAX INVOICE</text>
+  <text x="740" y="170" fill="#e0f2fe" font-family="monospace" font-size="14">#PC-88219</text>
+
+  <!-- Invoice Details Grid -->
+  <text x="160" y="240" fill="#64748b" font-family="sans-serif" font-size="13" font-weight="bold">BILLED TO (TENANT):</text>
+  <text x="160" y="265" fill="#0f172a" font-family="sans-serif" font-size="16" font-weight="bold">Sarah Jenkins</text>
+  <text x="160" y="290" fill="#334155" font-family="sans-serif" font-size="14">Apt 4B, 142 Crown Street, Surry Hills NSW 2010</text>
+
+  <text x="560" y="240" fill="#64748b" font-family="sans-serif" font-size="13" font-weight="bold">SERVICE DATE:</text>
+  <text x="560" y="265" fill="#0f172a" font-family="sans-serif" font-size="16" font-weight="bold">09 January 2025 (10:00 - 14:00)</text>
+  <text x="560" y="290" fill="#0284c7" font-family="sans-serif" font-size="14" font-weight="bold">Bond Guarantee: 72-Hour Free Callback</text>
+
+  <!-- Line items table -->
+  <line x1="160" y1="320" x2="840" y2="320" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="160" y="330" width="680" height="36" fill="#f1f5f9" rx="4"/>
+  <text x="180" y="354" fill="#475569" font-family="sans-serif" font-size="13" font-weight="bold">DESCRIPTION</text>
+  <text x="580" y="354" fill="#475569" font-family="sans-serif" font-size="13" font-weight="bold">STATUS</text>
+  <text x="760" y="354" fill="#475569" font-family="sans-serif" font-size="13" font-weight="bold">AMOUNT</text>
+
+  <!-- Row 1 -->
+  <text x="180" y="400" fill="#0f172a" font-family="sans-serif" font-size="14" font-weight="600">Full End-of-Lease Clean (1-Bed Unit)</text>
+  <text x="180" y="420" fill="#64748b" font-family="sans-serif" font-size="12">Internal windows, skirting boards, floors, fixtures</text>
+  <text x="580" y="405" fill="#16a34a" font-family="sans-serif" font-size="13" font-weight="bold">✓ Complete</text>
+  <text x="760" y="405" fill="#0f172a" font-family="monospace" font-size="14" font-weight="bold">$120.00</text>
+  <line x1="160" y1="440" x2="840" y2="440" stroke="#f1f5f9" stroke-width="1.5"/>
+
+  <!-- Row 2 -->
+  <text x="180" y="475" fill="#0f172a" font-family="sans-serif" font-size="14" font-weight="600">Kitchen Oven & Cooktop Degreasing Service</text>
+  <text x="180" y="495" fill="#64748b" font-family="sans-serif" font-size="12">Chemical carbon soak, glass racks degreased</text>
+  <text x="580" y="480" fill="#16a34a" font-family="sans-serif" font-size="13" font-weight="bold">✓ Passed Standard</text>
+  <text x="760" y="480" fill="#0f172a" font-family="monospace" font-size="14" font-weight="bold">$60.00</text>
+  <line x1="160" y1="515" x2="840" y2="515" stroke="#f1f5f9" stroke-width="1.5"/>
+
+  <!-- Row 3: Total -->
+  <line x1="560" y1="560" x2="840" y2="560" stroke="#94a3b8" stroke-width="2"/>
+  <text x="580" y="595" fill="#0f172a" font-family="sans-serif" font-size="18" font-weight="bold">TOTAL PAID AUD:</text>
+  <text x="750" y="595" fill="#0284c7" font-family="monospace" font-size="20" font-weight="900">$180.00</text>
+
+  <!-- Big PAID STAMP -->
+  <g transform="translate(320, 640) rotate(-12)">
+    <rect x="0" y="0" width="220" height="75" rx="8" fill="none" stroke="#16a34a" stroke-width="6" stroke-dasharray="10,2"/>
+    <text x="35" y="52" fill="#16a34a" font-family="sans-serif" font-size="44" font-weight="900" letter-spacing="4">PAID</text>
+  </g>
+
+  <!-- Statutory note on invoice footer -->
+  <rect x="160" y="760" width="680" height="90" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="180" y="790" fill="#475569" font-family="sans-serif" font-size="12" font-weight="bold">STATUTORY NOTICE — S51(1) RESIDENTIAL TENANCIES ACT 2010 (NSW):</text>
+  <text x="180" y="812" fill="#64748b" font-family="sans-serif" font-size="11">Premises returned in reasonably clean condition having regard to start condition.</text>
+  <text x="180" y="830" fill="#64748b" font-family="sans-serif" font-size="11">Landlord mandatory commercial cleaning demands are strictly prohibited under Fair Trading regulations.</text>
+</svg>

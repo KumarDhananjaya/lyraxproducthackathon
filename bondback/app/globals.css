@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Google Sans", "Product Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #202124;
+    background-color: #F8FAFD;
+  }
+}
+
+@layer utilities {
+  @keyframes scanline {
+    0% {
+      top: 0%;
+      opacity: 0.9;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      top: 100%;
+      opacity: 0.9;
+    }
+  }
+
+  @keyframes spinSlow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% {
+      box-shadow: 0 0 15px rgba(26, 115, 232, 0.35);
+    }
+    50% {
+      box-shadow: 0 0 25px rgba(26, 115, 232, 0.65);
+    }
+  }
+
+  .animate-scanline {
+    position: absolute;
+    animation: scanline 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spinSlow 12s linear infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+}
+
+/* Google-style Elevation Shadows */
+.google-shadow-1 {
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+}
+
+.google-shadow-2 {
+  box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
+}
+
+.google-shadow-3 {
+  box-shadow: 0 2px 6px 2px rgba(60, 64, 67, 0.15), 0 1px 2px 0 rgba(60, 64, 67, 0.3);
+}
+
+/* Formal Tribunal Print Optimization */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  header,
+  footer,
+  nav {
+    display: none !important;
+  }
+
+  .dossier-print-container {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #ffffff !important;
+  }
+
+  .dossier-page-break {
+    page-break-after: always !important;
+    break-after: page !important;
+    display: block !important;
+    height: 0 !important;
+  }
+
+  .dossier-page {
+    page-break-inside: avoid !important;
+  }
+}
