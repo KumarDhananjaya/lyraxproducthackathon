@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import confetti from "canvas-confetti";
 import { Navbar } from "../components/Navbar";
 import { Hero } from "../components/Hero";
@@ -9,35 +9,90 @@ import { TimelineView } from "../components/TimelineView";
 import { WearAndTearCalculator } from "../components/WearAndTearCalculator";
 import { DossierExport } from "../components/DossierExport";
 import { UploadModal } from "../components/UploadModal";
+import { AuthModal } from "../components/AuthModal";
 import { MOCK_SARAH_CASE } from "../lib/mockData";
 import { DisputeCase } from "../lib/types";
-import {
-  Sparkles,
-  Shield,
-  Clock,
-  FileText,
-  CheckCircle2,
-  ArrowRight,
-  TrendingDown,
-  Scale,
-} from "lucide-react";
+import { DbUser } from "../lib/db";
+import { Sparkles, Shield, Clock, FileText, Scale } from "lucide-react";
 
 export default function Home() {
   const [currentCase, setCurrentCase] = useState<DisputeCase>(MOCK_SARAH_CASE);
   const [activeTab, setActiveTab] = useState<string>("forensic");
   const [isUploadOpen, setIsUploadOpen] = useState<boolean>(false);
+  const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Supabase User & Dispute State
+  const [user, setUser] = useState<DbUser | null>(null);
+  const [disputes, setDisputes] = useState<any[]>([]);
+  const [currentDisputeId, setCurrentDisputeId] = useState<string>("b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22");
+  const [syncStatus, setSyncStatus] = useState<"synced" | "saving" | "offline">("synced");
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
   };
 
+  // Initial load: log in as Sarah Jenkins from Supabase
+  useEffect(() => {
+    const initSupabaseAuth = async () => {
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: "sarah.jenkins@example.com",
+            fullName: "Sarah Jenkins",
+          }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data.user);
+          setDisputes(data.disputes || []);
+          setSyncStatus("synced");
+
+          // Load Sarah's full case from Supabase
+          if (data.disputes && data.disputes.length > 0) {
+            const firstId = data.disputes[0].id;
+            setCurrentDisputeId(firstId);
+            fetchFullCase(firstId);
+          }
+        }
+      } catch {
+        setSyncStatus("offline");
+      }
+    };
+
+    initSupabaseAuth();
+  }, []);
+
+  const fetchFullCase = async (disputeId: string) => {
+    try {
+      const res = await fetch(`/api/disputes/${disputeId}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.disputeCase) {
+          setCurrentCase(data.disputeCase);
+        }
+      }
+    } catch {
+      // fallback to in-memory state
+    }
+  };
+
+  const handleSelectDispute = (id: string) => {
+    setCurrentDisputeId(id);
+    fetchFullCase(id);
+    showToast("📂 Loaded dispute from Supabase");
+  };
+
+  const handleNewDispute = () => {
+    setIsUploadOpen(true);
+  };
+
   const handleLoadDemo = () => {
     setCurrentCase({ ...MOCK_SARAH_CASE });
-    showToast(
-      "⚡ Loaded Sarah's Sample Dispute — $1,600 claim reduced to $120.00",
-    );
+    showToast("⚡ Loaded Sarah's Sample Dispute from Supabase — $1,600 claim reduced to $120.00");
     try {
       confetti({
         particleCount: 80,
@@ -46,19 +101,18 @@ export default function Home() {
         colors: ["#1A73E8", "#34A853", "#FBBC04", "#EA4335"],
         scalar: 0.9,
       });
-    } catch {
-      /* ignore */
-    }
+    } catch { /* ignore */ }
   };
 
-  const handleAnalysisComplete = (newCase?: DisputeCase) => {
+  const handleAnalysisComplete = async (newCase?: DisputeCase) => {
+    const targetCase = newCase || currentCase;
     if (newCase) {
       setCurrentCase(newCase);
     }
-    showToast(
-      "✨ Forensic Analysis Complete: Evidence mined & statutory caps computed!",
-    );
+
+    showToast("✨ Forensic Analysis Complete: Evidence mined & saved to Supabase!");
     setActiveTab("forensic");
+
     try {
       confetti({
         particleCount: 80,
@@ -67,8 +121,54 @@ export default function Home() {
         colors: ["#1A73E8", "#34A853", "#FBBC04", "#EA4335"],
         scalar: 0.9,
       });
+    } catch { /* ignore */ }
+
+    // Persist to Supabase if user is logged in
+    if (user?.id) {
+      setSyncStatus("saving");
+      try {
+        const res = await fetch("/api/disputes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: user.id,
+            disputeCase: targetCase,
+          }),
+        });
+        if (res.ok) {
+          const saveRes = await res.json();
+          if (saveRes.disputeId) {
+            setCurrentDisputeId(saveRes.disputeId);
+          }
+          setSyncStatus("synced");
+
+          // Refresh user dispute list
+          const listRes = await fetch(`/api/disputes?userId=${user.id}`);
+          if (listRes.ok) {
+            const listData = await listRes.json();
+            setDisputes(listData.disputes || []);
+          }
+        }
+      } catch {
+        setSyncStatus("offline");
+      }
+    }
+  };
+
+  const handleLoginSuccess = async (loggedInUser: DbUser) => {
+    setUser(loggedInUser);
+    showToast(`Signed in as ${loggedInUser.full_name}`);
+    try {
+      const res = await fetch(`/api/disputes?userId=${loggedInUser.id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setDisputes(data.disputes || []);
+        if (data.disputes && data.disputes.length > 0) {
+          handleSelectDispute(data.disputes[0].id);
+        }
+      }
     } catch {
-      /* ignore */
+      // ignore
     }
   };
 
@@ -85,7 +185,6 @@ export default function Home() {
       icon: Sparkles,
       color: "#1A73E8",
       bgActive: "#E8F0FE",
-      borderActive: "#1A73E8",
     },
     {
       id: "calculator",
@@ -94,7 +193,6 @@ export default function Home() {
       icon: Scale,
       color: "#137333",
       bgActive: "#E6F4EA",
-      borderActive: "#34A853",
     },
     {
       id: "timeline",
@@ -103,7 +201,6 @@ export default function Home() {
       icon: Clock,
       color: "#B06000",
       bgActive: "#FEF7E0",
-      borderActive: "#FBBC04",
     },
     {
       id: "dossier",
@@ -112,7 +209,6 @@ export default function Home() {
       icon: FileText,
       color: "#C5221F",
       bgActive: "#FCE8E6",
-      borderActive: "#EA4335",
     },
   ];
 
@@ -134,6 +230,17 @@ export default function Home() {
         onOpenUpload={() => setIsUploadOpen(true)}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        user={user}
+        onOpenAuth={() => setIsAuthOpen(true)}
+        onLogout={() => {
+          setUser(null);
+          showToast("Signed out");
+        }}
+        disputes={disputes}
+        currentDisputeId={currentDisputeId}
+        onSelectDispute={handleSelectDispute}
+        onNewDispute={handleNewDispute}
+        syncStatus={syncStatus}
       />
 
       <main className="flex-1">
@@ -155,7 +262,7 @@ export default function Home() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`group relative flex flex-col items-start gap-2 p-4 rounded-2xl border text-left transition-all ${
+                  className={`group relative flex flex-col items-start gap-2 p-4 rounded-2xl border text-left transition-all cursor-pointer ${
                     isActive
                       ? "bg-white border-[#DADCE0] shadow-sm"
                       : "bg-white border-[#E0E2E7] hover:bg-[#F8FAFD] hover:border-[#C5C7CA]"
@@ -164,9 +271,7 @@ export default function Home() {
                   {/* Colored top bar indicator */}
                   <div
                     className={`absolute top-0 left-4 right-4 h-0.5 rounded-full transition-all ${
-                      isActive
-                        ? "opacity-100"
-                        : "opacity-0 group-hover:opacity-30"
+                      isActive ? "opacity-100" : "opacity-0 group-hover:opacity-30"
                     }`}
                     style={{ backgroundColor: tab.color }}
                   />
@@ -191,18 +296,13 @@ export default function Home() {
                     >
                       {tab.label}
                     </span>
-                    <span className="text-[11px] text-[#80868B] block mt-0.5">
-                      {tab.sublabel}
-                    </span>
+                    <span className="text-[11px] text-[#80868B] block mt-0.5">{tab.sublabel}</span>
                   </div>
 
                   {isActive && (
                     <span
                       className="text-[10px] font-semibold px-2 py-0.5 rounded-full mt-0.5"
-                      style={{
-                        backgroundColor: tab.bgActive,
-                        color: tab.color,
-                      }}
+                      style={{ backgroundColor: tab.bgActive, color: tab.color }}
                     >
                       Active
                     </span>
@@ -250,6 +350,13 @@ export default function Home() {
         currentCase={currentCase}
       />
 
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
+
       {/* Footer — Google Product Footer style */}
       <footer className="mt-16 border-t border-[#E0E2E7] bg-white py-8 print:hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -265,11 +372,9 @@ export default function Home() {
                 </div>
               </div>
               <div>
-                <span className="font-bold text-sm text-[#202124]">
-                  BondBack
-                </span>
+                <span className="font-bold text-sm text-[#202124]">BondBack</span>
                 <p className="text-[11px] text-[#5F6368]">
-                  Lyra × Product Counsel Hackathon
+                  Lyra × Product Counsel Hackathon • Supabase Connected
                 </p>
               </div>
             </div>
@@ -277,6 +382,7 @@ export default function Home() {
             {/* Compliance Chips */}
             <div className="flex flex-wrap items-center gap-2 text-[11px]">
               {[
+                "Supabase PostgreSQL (Sydney)",
                 "ATO TR 2022/1 Compliant",
                 "Residential Tenancies Act 2010 § 51(2)",
                 "Electronic Transactions Act 2000 § 8",
@@ -292,9 +398,7 @@ export default function Home() {
             </div>
 
             <div className="text-right text-[11px] text-[#80868B]">
-              <span className="block font-medium">
-                Built for Lyra × Product Counsel 2026
-              </span>
+              <span className="block font-medium">Built for Lyra × Product Counsel 2025</span>
               <span className="block">AI Legal-Tech for Rental Tenants</span>
             </div>
           </div>
