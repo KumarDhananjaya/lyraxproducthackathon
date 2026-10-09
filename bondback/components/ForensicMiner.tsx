@@ -32,6 +32,13 @@ export function ForensicMiner({ evidenceList, selectedEvidenceId = "ev-1" }: For
   const [copiedHash, setCopiedHash] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
 
+  // Automatically select the newest evidence item if a user uploads a new file
+  React.useEffect(() => {
+    if (evidenceList.length > 0 && evidenceList[0].id.startsWith("user-ev-")) {
+      setActiveId(evidenceList[0].id);
+    }
+  }, [evidenceList]);
+
   const activeEvidence = evidenceList.find((e) => e.id === activeId) || evidenceList[0];
 
   const handleCopyHash = (hash?: string) => {

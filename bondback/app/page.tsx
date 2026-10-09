@@ -11,7 +11,16 @@ import { DossierExport } from "../components/DossierExport";
 import { UploadModal } from "../components/UploadModal";
 import { MOCK_SARAH_CASE } from "../lib/mockData";
 import { DisputeCase } from "../lib/types";
-import { Sparkles, Shield, Clock, FileText, CheckCircle2, ArrowRight, TrendingDown, Scale } from "lucide-react";
+import {
+  Sparkles,
+  Shield,
+  Clock,
+  FileText,
+  CheckCircle2,
+  ArrowRight,
+  TrendingDown,
+  Scale,
+} from "lucide-react";
 
 export default function Home() {
   const [currentCase, setCurrentCase] = useState<DisputeCase>(MOCK_SARAH_CASE);
@@ -26,7 +35,9 @@ export default function Home() {
 
   const handleLoadDemo = () => {
     setCurrentCase({ ...MOCK_SARAH_CASE });
-    showToast("⚡ Loaded Sarah's Sample Dispute — $1,600 claim reduced to $120.00");
+    showToast(
+      "⚡ Loaded Sarah's Sample Dispute — $1,600 claim reduced to $120.00",
+    );
     try {
       confetti({
         particleCount: 80,
@@ -35,13 +46,30 @@ export default function Home() {
         colors: ["#1A73E8", "#34A853", "#FBBC04", "#EA4335"],
         scalar: 0.9,
       });
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   };
 
-  const handleAnalysisComplete = () => {
-    handleLoadDemo();
-    showToast("✨ Forensic Analysis Complete: Pre-existing stain mined in IMG_4091.jpg!");
+  const handleAnalysisComplete = (newCase?: DisputeCase) => {
+    if (newCase) {
+      setCurrentCase(newCase);
+    }
+    showToast(
+      "✨ Forensic Analysis Complete: Evidence mined & statutory caps computed!",
+    );
     setActiveTab("forensic");
+    try {
+      confetti({
+        particleCount: 80,
+        spread: 85,
+        origin: { y: 0.55 },
+        colors: ["#1A73E8", "#34A853", "#FBBC04", "#EA4335"],
+        scalar: 0.9,
+      });
+    } catch {
+      /* ignore */
+    }
   };
 
   const scrollToSection = (id: string) => {
@@ -136,7 +164,9 @@ export default function Home() {
                   {/* Colored top bar indicator */}
                   <div
                     className={`absolute top-0 left-4 right-4 h-0.5 rounded-full transition-all ${
-                      isActive ? "opacity-100" : "opacity-0 group-hover:opacity-30"
+                      isActive
+                        ? "opacity-100"
+                        : "opacity-0 group-hover:opacity-30"
                     }`}
                     style={{ backgroundColor: tab.color }}
                   />
@@ -161,13 +191,18 @@ export default function Home() {
                     >
                       {tab.label}
                     </span>
-                    <span className="text-[11px] text-[#80868B] block mt-0.5">{tab.sublabel}</span>
+                    <span className="text-[11px] text-[#80868B] block mt-0.5">
+                      {tab.sublabel}
+                    </span>
                   </div>
 
                   {isActive && (
                     <span
                       className="text-[10px] font-semibold px-2 py-0.5 rounded-full mt-0.5"
-                      style={{ backgroundColor: tab.bgActive, color: tab.color }}
+                      style={{
+                        backgroundColor: tab.bgActive,
+                        color: tab.color,
+                      }}
                     >
                       Active
                     </span>
@@ -212,6 +247,7 @@ export default function Home() {
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}
         onAnalysisComplete={handleAnalysisComplete}
+        currentCase={currentCase}
       />
 
       {/* Footer — Google Product Footer style */}
@@ -229,7 +265,9 @@ export default function Home() {
                 </div>
               </div>
               <div>
-                <span className="font-bold text-sm text-[#202124]">BondBack</span>
+                <span className="font-bold text-sm text-[#202124]">
+                  BondBack
+                </span>
                 <p className="text-[11px] text-[#5F6368]">
                   Lyra × Product Counsel Hackathon
                 </p>
@@ -254,7 +292,9 @@ export default function Home() {
             </div>
 
             <div className="text-right text-[11px] text-[#80868B]">
-              <span className="block font-medium">Built for Lyra × Product Counsel 2025</span>
+              <span className="block font-medium">
+                Built for Lyra × Product Counsel 2026
+              </span>
               <span className="block">AI Legal-Tech for Rental Tenants</span>
             </div>
           </div>
