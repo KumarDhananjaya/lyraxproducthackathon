@@ -101,7 +101,12 @@ class WorkflowOrchestrator:
 
         photo_docs = [d for d in docs if d.mime_type.startswith("image/")]
 
-        # If user uploaded photos, process each one
+        # Check if condition report was uploaded in the session
+        has_condition_report = any(d.document_type == DocumentType.condition_report for d in docs)
+        if has_condition_report:
+            has_paint_pre_existing_proof = True
+
+        # If photo docs were uploaded, process them
         if photo_docs:
             for p_doc in photo_docs:
                 img_bytes = await storage_service.read_file_bytes(p_doc.stored_filename)
@@ -124,6 +129,7 @@ class WorkflowOrchestrator:
                 vision_findings.append(finding)
                 if finding.defect_found:
                     has_carpet_pre_existing_proof = True
+                    has_paint_pre_existing_proof = True
         else:
             # Generate simulated finding from Sarah's pre-loaded evidence
             finding = await ai_service.analyze_photo_defect(

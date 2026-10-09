@@ -43,16 +43,19 @@ def verify_magic_bytes(data: bytes, reported_mime: str) -> str:
     if len(data) == 0:
         raise ValueError("Uploaded file is empty (0 bytes)")
 
-    if reported_mime == "image/jpeg" and data.startswith(b"\xff\xd8\xff"):
-        return "image/jpeg"
-    if reported_mime == "image/png" and data.startswith(b"\x89PNG\r\n\x1a\n"):
-        return "image/png"
-    if reported_mime == "image/webp" and data.startswith(b"RIFF") and len(data) >= 12 and data[8:12] == b"WEBP":
-        return "image/webp"
-    if reported_mime == "application/pdf" and data.startswith(b"%PDF-"):
-        return "application/pdf"
+    # Strict verification for image/pdf to prevent extension/MIME spoofing
+    if reported_mime in ("image/jpeg", "image/png", "image/webp", "application/pdf"):
+        if reported_mime == "image/jpeg" and data.startswith(b"\xff\xd8\xff"):
+            return "image/jpeg"
+        if reported_mime == "image/png" and data.startswith(b"\x89PNG\r\n\x1a\n"):
+            return "image/png"
+        if reported_mime == "image/webp" and data.startswith(b"RIFF") and len(data) >= 12 and data[8:12] == b"WEBP":
+            return "image/webp"
+        if reported_mime == "application/pdf" and data.startswith(b"%PDF-"):
+            return "application/pdf"
+        raise ValueError(f"File claims to be '{reported_mime}' but content signature does not match.")
 
-    # Header autodetection
+    # Header autodetection for unstated / generic octet-stream
     if data.startswith(b"\xff\xd8\xff"):
         return "image/jpeg"
     if data.startswith(b"\x89PNG\r\n\x1a\n"):
@@ -63,11 +66,12 @@ def verify_magic_bytes(data: bytes, reported_mime: str) -> str:
         return "application/pdf"
 
     # Plain text check (ASCII / UTF-8 decodable with low non-printable ratio)
-    try:
-        data[:1024].decode("utf-8")
-        return "text/plain"
-    except UnicodeDecodeError:
-        pass
+    if reported_mime == "text/plain":
+        try:
+            data[:1024].decode("utf-8")
+            return "text/plain"
+        except UnicodeDecodeError:
+            pass
 
     raise ValueError(f"File content signature does not match allowed types: {reported_mime}")
 

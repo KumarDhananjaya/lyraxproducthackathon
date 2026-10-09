@@ -50,7 +50,6 @@ def setup_logging(log_dir: Path, log_level: str = "DEBUG") -> None:
     # ── Stdlib root config ────────────────────────────────────────────────────
     logging.basicConfig(
         format="%(message)s",
-        stream=sys.stdout,
         level=level,
         handlers=[file_handler],
         force=True,

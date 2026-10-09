@@ -112,15 +112,26 @@ class AIService:
         """Contingency parser for offline / zero-key hackathon demos."""
         items = []
 
-        # Carpet detection
-        if re.search(r"carpet|rug|wool", text, re.I):
-            carpet_amt = 850.0
-            amt_match = re.search(r"carpet[^\$]*\$([0-9,.]+)", text, re.I)
-            if amt_match:
+        def extract_amount(keyword_pattern: str, default_val: float) -> float:
+            # Check $AMOUNT followed by keyword
+            m1 = re.search(r"\$([0-9,]+(?:\.[0-9]{2})?)[^\n\.\,]*" + keyword_pattern, text, re.I)
+            if m1:
                 try:
-                    carpet_amt = float(amt_match.group(1).replace(",", ""))
+                    return float(m1.group(1).replace(",", ""))
                 except ValueError:
                     pass
+            # Check keyword followed by $AMOUNT
+            m2 = re.search(keyword_pattern + r"[^\$]*\$([0-9,]+(?:\.[0-9]{2})?)", text, re.I)
+            if m2:
+                try:
+                    return float(m2.group(1).replace(",", ""))
+                except ValueError:
+                    pass
+            return default_val
+
+        # Carpet detection
+        if re.search(r"carpet|rug|wool", text, re.I):
+            carpet_amt = extract_amount(r"(?:carpet|rug|wool)", 850.0)
             items.append(
                 ParsedClaimItem(
                     category=ClaimCategory.carpet,
@@ -133,13 +144,7 @@ class AIService:
 
         # Painting detection
         if re.search(r"paint|wall|scuff", text, re.I):
-            paint_amt = 450.0
-            amt_match = re.search(r"paint[^\$]*\$([0-9,.]+)", text, re.I)
-            if amt_match:
-                try:
-                    paint_amt = float(amt_match.group(1).replace(",", ""))
-                except ValueError:
-                    pass
+            paint_amt = extract_amount(r"(?:paint|wall|scuff)", 450.0)
             items.append(
                 ParsedClaimItem(
                     category=ClaimCategory.painting,
@@ -152,13 +157,7 @@ class AIService:
 
         # Cleaning detection
         if re.search(r"clean|oven|rangehood", text, re.I):
-            clean_amt = 300.0
-            amt_match = re.search(r"clean[^\$]*\$([0-9,.]+)", text, re.I)
-            if amt_match:
-                try:
-                    clean_amt = float(amt_match.group(1).replace(",", ""))
-                except ValueError:
-                    pass
+            clean_amt = extract_amount(r"(?:clean|oven|rangehood)", 300.0)
             items.append(
                 ParsedClaimItem(
                     category=ClaimCategory.cleaning,
